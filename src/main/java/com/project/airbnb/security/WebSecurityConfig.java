@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/bookings/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .exceptionHandling(excpHndlCnfg -> excpHndlCnfg.accessDeniedHandler());
+                .exceptionHandling(excpHndlCnfg -> excpHndlCnfg.accessDeniedHandler(accessDeniedHandler()));
 
         return httpSecurity.build();
     }

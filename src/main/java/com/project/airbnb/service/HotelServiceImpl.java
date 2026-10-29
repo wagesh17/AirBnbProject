@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -48,9 +49,10 @@ public class HotelServiceImpl implements HotelService {
         log.info("Getting hotel with id : {}",id);
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id : "+id));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
 
-        if(user.equals(hotel.getOwner())){
+        assert user != null;
+        if(!user.equals(hotel.getOwner())){
             throw new UnAuthorisedException("This user doesn't own hotel");
         }
         return modelMapper.map(hotel, HotelDto.class);
